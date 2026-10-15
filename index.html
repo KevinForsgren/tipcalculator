@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tip Split</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (function () {
+        var stored = localStorage.getItem("tip-theme");
+        var theme =
+          stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+        document.documentElement.setAttribute("data-theme", theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M7 7.5h10M7 12h6"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <rect
+                x="3.5"
+                y="3.5"
+                width="17"
+                height="17"
+                rx="4"
+                stroke="currentColor"
+                stroke-width="1.8"
+              />
+              <path
+                d="M15.2 14.2 18 17"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <circle cx="13.2" cy="13.2" r="2.3" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+          </span>
+          <div>
+            <p class="eyebrow">Dining math</p>
+            <h1>Tip Split</h1>
+          </div>
+        </div>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme">
+          <span class="icon icon-sun" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8" />
+              <path
+                d="M12 3.2v1.8M12 19v1.8M3.2 12h1.8M19 12h1.8M5.6 5.6l1.3 1.3M17.1 17.1l1.3 1.3M5.6 18.4l1.3-1.3M17.1 6.9l1.3-1.3"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+            </svg>
+          </span>
+          <span class="icon icon-moon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path
+                d="M16.4 14.3A6.5 6.5 0 0 1 9.7 7.6 6.6 6.6 0 1 0 16.4 14.3Z"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+        </button>
+      </header>
+
+      <main class="layout">
+        <section class="card inputs" aria-labelledby="inputs-title">
+          <h2 id="inputs-title" class="visually-hidden">Bill details</h2>
+
+          <label class="field">
+            <span class="field-label">
+              <span class="field-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="4" y="5" width="16" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8" />
+                  <path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+              </span>
+              Bill amount
+            </span>
+            <span class="input-wrap">
+              <span class="prefix">$</span>
+              <input
+                id="bill"
+                type="number"
+                inputmode="decimal"
+                min="0"
+                step="0.01"
+                placeholder="0.00"
+                autocomplete="off"
+              />
+            </span>
+          </label>
+
+          <fieldset class="tip-group">
+            <legend>
+              <span class="field-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="8.5" cy="8.5" r="1.4" fill="currentColor" />
+                  <circle cx="15.5" cy="15.5" r="1.4" fill="currentColor" />
+                  <path d="M17 7 7 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                </svg>
+              </span>
+              Tip percent
+            </legend>
+            <div class="tip-grid" role="group" aria-label="Preset tip percentages">
+              <button type="button" class="chip" data-tip="10">10%</button>
+              <button type="button" class="chip" data-tip="15">15%</button>
+              <button type="button" class="chip is-active" data-tip="18">18%</button>
+              <button type="button" class="chip" data-tip="20">20%</button>
+              <button type="button" class="chip" data-tip="25">25%</button>
+            </div>
+            <label class="field compact">
+              <span class="field-label">Custom</span>
+              <span class="input-wrap">
+                <input
+                  id="customTip"
+                  type="number"
+                  inputmode="decimal"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  placeholder="e.g. 22"
+                />
+                <span class="suffix">%</span>
+              </span>
+            </label>
+          </fieldset>
+
+          <div class="field">
+            <span class="field-label" id="people-label">
+              <span class="field-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <circle cx="9" cy="8" r="3.1" stroke="currentColor" stroke-width="1.8" />
+                  <path
+                    d="M4.2 19c.6-3.1 2.8-5 4.8-5s4.2 1.9 4.8 5"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  />
+                  <circle cx="16.5" cy="8.5" r="2.4" stroke="currentColor" stroke-width="1.8" />
+                  <path
+                    d="M15.2 14c1.7.2 3.3 1.5 3.8 4.2"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  />
+                </svg>
+              </span>
+              Split between
+            </span>
+            <div class="stepper">
+              <button type="button" id="peopleMinus" aria-label="Decrease number of people">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </button>
+              <input
+                id="people"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                max="99"
+                value="1"
+                aria-labelledby="people-label"
+              />
+              <button type="button" id="peoplePlus" aria-label="Increase number of people">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card results" aria-labelledby="results-title">
+          <div class="results-head">
+            <h2 id="results-title">Your split</h2>
+            <p class="hint" id="statusHint">Enter a bill to see totals.</p>
+          </div>
+
+          <dl class="totals">
+            <div class="row">
+              <dt>Tip</dt>
+              <dd id="tipAmount">$0.00</dd>
+            </div>
+            <div class="row">
+              <dt>Grand total</dt>
+              <dd id="grandTotal">$0.00</dd>
+            </div>
+            <div class="row emphasize">
+              <dt>
+                Per person
+                <span class="meta" id="peopleMeta">1 guest</span>
+              </dt>
+              <dd id="perPerson">$0.00</dd>
+            </div>
+          </dl>
+
+          <button type="button" class="reset" id="reset">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M5.5 8.5A7 7 0 1 1 5 12"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              />
+              <path
+                d="M5.5 4.8v3.7h3.7"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Reset
+          </button>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
